@@ -32,6 +32,20 @@ See also: [ARCHITECTURE.md](ARCHITECTURE.md) (design rationale),
 [AI_WORKFLOW.md](AI_WORKFLOW.md) (how this was built), and
 [SUBMISSION.md](SUBMISSION.md) (requirements checklist + current status).
 
+## Quick start
+
+Requires a CockroachDB Cloud connection string first — see
+[Running locally](#running-locally) below for where to get one.
+
+```bash
+cp backend/.env.example backend/.env   # fill in DATABASE_URL
+export DATABASE_URL=$(grep DATABASE_URL backend/.env | cut -d= -f2-)
+export JWT_SECRET=some-long-random-string
+docker compose up --build
+```
+
+Then open http://localhost:3000 (backend runs at http://localhost:8000).
+
 ## Live deployment
 
 - Frontend: _TODO — Vercel URL_
@@ -53,15 +67,7 @@ for the format (note the `cockroachdb://` scheme, not `postgresql://` — see
 
 ### Option A — Docker Compose (recommended)
 
-```bash
-cp backend/.env.example backend/.env   # fill in DATABASE_URL
-export DATABASE_URL=$(grep DATABASE_URL backend/.env | cut -d= -f2-)
-export JWT_SECRET=some-long-random-string
-docker compose up --build
-```
-
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8000
+See [Quick start](#quick-start) above.
 
 ### Option B — run each side manually
 
@@ -105,13 +111,16 @@ doesn't), `test_documents.py` (CRUD, validation, sanitization, upload), and
 
 ## Deploying
 
-- **Frontend → Vercel:** import the repo, set the root directory to
-  `frontend/`, and set `NEXT_PUBLIC_API_URL` to the deployed backend URL.
-- **Backend → Render:** `backend/render.yaml` defines the web service
-  (Docker runtime). After connecting the repo, set `DATABASE_URL` (the
-  CockroachDB connection string) and `CORS_ORIGINS` (the Vercel frontend URL)
-  in the Render dashboard — both are intentionally left unset in
-  `render.yaml` since they're environment-specific.
+- **Frontend → Vercel:** import the [frontend repo](https://github.com/Anupamti/Ajaia-Assignment-frontend)
+  directly (it's its own repo, so the default root directory is correct —
+  no path override needed), and set `NEXT_PUBLIC_API_URL` to the deployed
+  backend URL.
+- **Backend → Render:** import the [backend repo](https://github.com/Anupamti/Ajaia-Assignment-backend).
+  `render.yaml` at its root defines the web service (Docker runtime). After
+  connecting the repo, set `DATABASE_URL` (the CockroachDB connection
+  string) and `CORS_ORIGINS` (the Vercel frontend URL) in the Render
+  dashboard — both are intentionally left unset in `render.yaml` since
+  they're environment-specific.
 
 ## Architecture notes — what I prioritized and why
 
