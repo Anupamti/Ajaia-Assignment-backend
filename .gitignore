@@ -1,0 +1,14 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.db
+
+# General
+.DS_Store
+*.log
+
+# Claude Code local settings
+.claude/
